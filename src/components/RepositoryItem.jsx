@@ -2,10 +2,6 @@ import { Text, View, Image, StyleSheet } from "react-native";
 import theme from "../theme";
 
 const styles = StyleSheet.create({
-	container: {
-		backgroundColor: 'white',
-		padding: 10
-	},
 	topFlexContainer: {
 		flexDirection: 'row',
 	},
@@ -92,7 +88,7 @@ const RepositoryItem = (props) => {
 	}
 
 	return (
-		<View style={styles.container}>
+		<View style={theme.pageItemContainer}>
 			<View style={styles.topFlexContainer}>
 				<Image
 					style={theme.profilePic}
