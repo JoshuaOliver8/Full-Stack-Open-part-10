@@ -14,9 +14,9 @@ const styles = StyleSheet.create({
 	}
 });
 
-const AppBarTab = ({ children, link }) => {
+const AppBarTab = ({ children, link, press }) => {
 	return (
-		<Link to={link} style={styles.container}>
+		<Link to={link} style={styles.container} onPress={press}>
 			<Text style={styles.text}>{children}</Text>
 		</Link>
 	);
