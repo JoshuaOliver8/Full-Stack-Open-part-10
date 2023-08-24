@@ -19,10 +19,10 @@ const styles = StyleSheet.create({
 });
 
 const validationSchema = yup.object().shape({
-	Username: yup
+	username: yup
 		.string()
 		.required('Username is required'),
-	Password: yup
+	password: yup
 		.string()
 		.required('Password is required'),
 });
@@ -56,11 +56,11 @@ const SignIn = () => {
 				{({ handleSubmit }) =>  
 					<View style={theme.pageItemContainer}>
 						<FormikTextInput
-							name={"Username"}
+							name={"username"}
 							placeholder="Username"
 						/>
 						<FormikTextInput 
-							name={"Password"}
+							name={"password"}
 							placeholder="Password"
 							secureTextEntry={true} 
 						/>
