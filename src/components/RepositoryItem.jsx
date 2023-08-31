@@ -88,7 +88,7 @@ const RepositoryItem = (props) => {
 	}
 
 	return (
-		<View style={theme.pageItemContainer}>
+		<View testID="repositoryItem" style={theme.pageItemContainer}>
 			<View style={styles.topFlexContainer}>
 				<Image
 					style={theme.profilePic}
