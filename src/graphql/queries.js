@@ -40,3 +40,20 @@ export const CHECK_USER = gql`
         }
     }
 `;
+
+export const GET_ONE_USER_REPO = gql`
+    query ($id: ID!) {
+        repository(id: $id) {
+            id
+            fullName
+            reviewCount
+            ratingAverage
+            forksCount
+            stargazersCount
+            description
+            language
+            ownerAvatarUrl
+            url
+        }
+    }
+`;

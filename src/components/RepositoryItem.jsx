@@ -1,9 +1,11 @@
-import { Text, View, Image, StyleSheet } from "react-native";
+import { Text, View, Image, StyleSheet, Pressable } from "react-native";
+import * as Linking from 'expo-linking';
 import theme from "../theme";
 
 const styles = StyleSheet.create({
 	topFlexContainer: {
 		flexDirection: 'row',
+		height:100
 	},
 	topRightFlexContainer: {
 		flexDirection: 'column',
@@ -34,6 +36,7 @@ const styles = StyleSheet.create({
 		borderRadius: 5,
 		color: 'white',
 		padding: 5,
+		margin: 5,
 		alignSelf: 'flex-start'
 	},
 	bottomFlexContainer: {
@@ -61,6 +64,10 @@ const styles = StyleSheet.create({
 	legends: {
 		color: theme.colors.textSecondary,
 		flex: 1
+	},
+	linkButton: {
+		paddingLeft: 133,
+		paddingRight: 133,
 	}
 })
 
@@ -116,6 +123,12 @@ const RepositoryItem = (props) => {
 					<Text style={styles.legends}>Rating</Text>
 				</View>
 			</View>
+			{props.singleRepo && <Pressable 
+				style={[theme.centerButton, styles.linkButton]}
+				onPress={() => Linking.openURL(props.url)}
+			>
+				<Text style={theme.centerButtonText}>Open in GitHub</Text>
+			</Pressable>}
 		</View>
 	);
 }

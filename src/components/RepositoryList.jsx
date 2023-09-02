@@ -1,6 +1,7 @@
 import useRepositories from '../hooks/useRepositories';
-import { FlatList, View, StyleSheet } from 'react-native';
+import { FlatList, View, StyleSheet, Pressable } from 'react-native';
 import RepositoryItem from './RepositoryItem';
+import { useNavigate } from 'react-router-native';
 
 import theme from '../theme';
 
@@ -13,26 +14,29 @@ const styles = StyleSheet.create({
 
 const ItemSeparator = () => <View style={styles.separator} />;
 
-export const RepositoryListContainer = ({ repositories }) => {
-	const repositoryNodes = repositories
-		? repositories.edges.map((edge) => edge.node)
+export const RepositoryListContainer = (props) => {
+	const repositoryNodes = props.repositories
+		? props.repositories.edges.map((edge) => edge.node)
 		: [];
 
 	return (
 		<FlatList
 			data={repositoryNodes}
 			ItemSeparatorComponent={ItemSeparator}
-			renderItem={({item}) => 
-				<RepositoryItem
-					fullName={item.fullName}
-					description={item.description}
-					language={item.language}
-					stargazersCount={item.stargazersCount}
-					forksCount={item.forksCount}
-					reviewCount={item.reviewCount}
-					ratingAverage={item.ratingAverage}
-					ownerAvatarUrl={item.ownerAvatarUrl}
-				/>
+			renderItem={({item}) =>
+				<Pressable onPress={() => props.navigate(item.id)}>
+					<RepositoryItem
+						fullName={item.fullName}
+						description={item.description}
+						language={item.language}
+						stargazersCount={item.stargazersCount}
+						forksCount={item.forksCount}
+						reviewCount={item.reviewCount}
+						ratingAverage={item.ratingAverage}
+						ownerAvatarUrl={item.ownerAvatarUrl}
+						singleRepo={false}
+					/>
+				</Pressable>
 			}
 			keyExtractor={item => item.id}
 		/>
@@ -41,8 +45,9 @@ export const RepositoryListContainer = ({ repositories }) => {
 
 const RepositoryList = () => {
 	const { repositories } = useRepositories();
+	const navigate = useNavigate();
 
-	return <RepositoryListContainer repositories={repositories} />
+	return <RepositoryListContainer repositories={repositories} navigate={navigate} />
 };
 
 export default RepositoryList;
