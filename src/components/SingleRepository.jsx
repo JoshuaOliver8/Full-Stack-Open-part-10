@@ -90,7 +90,7 @@ const ReviewItem = ({ review }) => {
 				</View>
 				<View style={styles.rightContainer}>
 					<Text style={styles.username}>{review.user.username}</Text>
-					<Text style={styles.date}>{format(reviewDate, 'dd.mm.yyyy')}</Text>
+					<Text style={styles.date}>{format(reviewDate, 'dd.MM.yyyy')}</Text>
 					<View style={styles.reviewTextContainer}>
 						<Text style={styles.reviewText}>{review.text}</Text>
 					</View>

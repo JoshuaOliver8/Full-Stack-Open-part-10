@@ -42,12 +42,17 @@ const AppBar = () => {
 				</AppBarTab>
 				{data.me === null && 
 				(<AppBarTab link={"/signin"}>
-					Sign In
+					Sign in
 				</AppBarTab>)}
 				{data.me !== null && 
-				(<AppBarTab link={"/"} press={logOut}>
-					Sign Out
-				</AppBarTab>)}
+				(<>
+					<AppBarTab link={"/"} press={logOut}>
+						Sign out
+					</AppBarTab>
+					<AppBarTab link={"/review"}>
+						Create a review
+					</AppBarTab>
+				</>)}
 			</ScrollView>
 		</View>);
 };
