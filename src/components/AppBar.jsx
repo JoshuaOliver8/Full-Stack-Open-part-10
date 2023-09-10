@@ -41,9 +41,14 @@ const AppBar = () => {
 					Repositories
 				</AppBarTab>
 				{data.me === null && 
-				(<AppBarTab link={"/signin"}>
-					Sign in
-				</AppBarTab>)}
+				(<>
+					<AppBarTab link={"/signin"}>
+						Sign in
+					</AppBarTab>
+					<AppBarTab link={"/signup"}>
+						Sign up
+					</AppBarTab>
+				</>)}
 				{data.me !== null && 
 				(<>
 					<AppBarTab link={"/"} press={logOut}>
