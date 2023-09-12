@@ -2,6 +2,8 @@ import useRepositories from '../hooks/useRepositories';
 import { FlatList, View, StyleSheet, Pressable } from 'react-native';
 import RepositoryItem from './RepositoryItem';
 import { useNavigate } from 'react-router-native';
+import { useState, useEffect } from 'react';
+import {Picker} from '@react-native-picker/picker';
 
 import theme from '../theme';
 
@@ -13,6 +15,19 @@ const styles = StyleSheet.create({
 });
 
 const ItemSeparator = () => <View style={styles.separator} />;
+
+const RepositoryViewSelector = (props) => (
+	<Picker
+		selectedValue={props.selectView}
+		onValueChange={(itemValue) => {
+			props.setSelectView(itemValue)
+		}}
+	>
+		<Picker.Item label="Latest repositories" value="Latest repositories" />
+		<Picker.Item label="Highest rated repositories" value="Highest rated repositories" />
+		<Picker.Item label="Lowest rated repositories" value="Lowest rated repositories" />
+	</Picker>
+);
 
 export const RepositoryListContainer = (props) => {
 	const repositoryNodes = props.repositories
@@ -39,15 +54,40 @@ export const RepositoryListContainer = (props) => {
 				</Pressable>
 			}
 			keyExtractor={item => item.id}
+			ListHeaderComponent={() => <RepositoryViewSelector 
+				selectView={props.selectView} 
+				setSelectView={props.setSelectView}
+			/>}
 		/>
 	);
 }
 
 const RepositoryList = () => {
-	const { repositories } = useRepositories();
+	const [orderBy, setOrderBy] = useState('CREATED_AT');
+	const [orderDirection, setOrderDirection] = useState('DESC');
+	const [selectView, setSelectView] = useState('Latest repositories');
+	const { repositories } = useRepositories(orderBy, orderDirection);
 	const navigate = useNavigate();
 
-	return <RepositoryListContainer repositories={repositories} navigate={navigate} />
+	useEffect(() => {
+		if (selectView === 'Latest repositories') {
+			setOrderBy('CREATED_AT');
+			setOrderDirection('DESC');
+		} else if (selectView === 'Highest rated repositories') {
+			setOrderBy('RATING_AVERAGE');
+			setOrderDirection('DESC');
+		} else if (selectView === 'Lowest rated repositories') {
+			setOrderBy('RATING_AVERAGE');
+			setOrderDirection('ASC');
+		}
+	}, [selectView])
+
+	return <RepositoryListContainer
+		repositories={repositories}
+		navigate={navigate}
+		selectView={selectView}
+		setSelectView={setSelectView}
+	/>;
 };
 
 export default RepositoryList;
