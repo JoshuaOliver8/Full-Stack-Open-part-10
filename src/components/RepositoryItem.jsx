@@ -5,12 +5,11 @@ import theme from "../theme";
 const styles = StyleSheet.create({
 	topFlexContainer: {
 		flexDirection: 'row',
-		height:100
+		height: 'auto'
 	},
 	topRightFlexContainer: {
 		flexDirection: 'column',
 		justifyContent: 'space-evenly',
-		flexGrow: 1,
 		flexWrap: 'wrap',
 		marginLeft: 5,
 		padding: 5,
@@ -18,17 +17,18 @@ const styles = StyleSheet.create({
 	name: {
 		flex: 1,
 		fontWeight: theme.fontWeights.bold,
-		color: theme.colors.textPrimary
+		color: theme.colors.textPrimary,
 	},
 	descContainer: {
 		flex: 1,
 		flexDirection: 'row',
 		flexGrow: 1,
-		width: 300
+		width: 300,
+		height: 'auto',
+		justifyContent: 'flex-start'
 	},
 	description: {
 		color: theme.colors.textSecondary,
-		flex: 1,
 	},
 	language: {
 		flex: 1,

@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-native';
 import { useState, useEffect } from 'react';
 import {Picker} from '@react-native-picker/picker';
 import { useDebounce } from 'use-debounce';
+import React from "react";
 
 import theme from '../theme';
 
@@ -67,39 +68,53 @@ const RepositoryViewSelector = (props) => (
 	</View>
 );
 
-export const RepositoryListContainer = (props) => {
-	const repositoryNodes = props.repositories
-		? props.repositories.edges.map((edge) => edge.node)
-		: [];
+export class RepositoryListContainer extends React.Component {
+	renderHeader = () => {
+		const props = this.props;
 
-	return (
-		<FlatList
-			data={repositoryNodes}
-			ItemSeparatorComponent={ItemSeparator}
-			renderItem={({item}) =>
-				<Pressable onPress={() => props.navigate(item.id)}>
-					<RepositoryItem
-						fullName={item.fullName}
-						description={item.description}
-						language={item.language}
-						stargazersCount={item.stargazersCount}
-						forksCount={item.forksCount}
-						reviewCount={item.reviewCount}
-						ratingAverage={item.ratingAverage}
-						ownerAvatarUrl={item.ownerAvatarUrl}
-						singleRepo={false}
-					/>
-				</Pressable>
-			}
-			keyExtractor={item => item.id}
-			ListHeaderComponent={() => <RepositoryViewSelector 
+		return (
+			<RepositoryViewSelector
 				selectView={props.selectView} 
 				setSelectView={props.setSelectView}
 				filterText={props.filterText}
 				setFilterText={props.setFilterText}
-			/>}
-		/>
-	);
+			/>
+		);
+	}
+
+	render() {
+		const props = this.props;
+
+		const repositoryNodes = props.repositories
+			? props.repositories.edges.map((edge) => edge.node)
+			: [];
+
+		return (
+			<FlatList
+				data={repositoryNodes}
+				ItemSeparatorComponent={ItemSeparator}
+				renderItem={({item}) =>
+					<Pressable onPress={() => props.navigate(item.id)}>
+						<RepositoryItem
+							fullName={item.fullName}
+							description={item.description}
+							language={item.language}
+							stargazersCount={item.stargazersCount}
+							forksCount={item.forksCount}
+							reviewCount={item.reviewCount}
+							ratingAverage={item.ratingAverage}
+							ownerAvatarUrl={item.ownerAvatarUrl}
+							singleRepo={false}
+						/>
+					</Pressable>
+				}
+				keyExtractor={item => item.id}
+				ListHeaderComponent={this.renderHeader}
+			/>
+		);
+	}
+
+	
 }
 
 const RepositoryList = () => {
