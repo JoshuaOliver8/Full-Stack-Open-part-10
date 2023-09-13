@@ -1,8 +1,10 @@
-import { View, Text, StyleSheet, FlatList } from 'react-native';
+import { View, Text, StyleSheet, FlatList, Pressable, Alert } from 'react-native';
 import { useQuery } from '@apollo/client';
 import { CHECK_USER } from '../graphql/queries';
+import useDeleteReview from '../hooks/useDeleteReview';
 import theme from '../theme';
 import { format } from 'date-fns';
+import { useNavigate } from 'react-router-native';
 
 const styles = StyleSheet.create({
 	separator: {
@@ -59,16 +61,37 @@ const styles = StyleSheet.create({
 	reviewTextContainer: {
 		width: 300,
 		flex: 3,
-
 	},
 	reviewText: {
 		fontSize: theme.fontSizes.body
+	},
+	leftButton: {
+		backgroundColor: theme.colors.primary,
+		paddingVertical: '3%',
+		paddingHorizontal: '8%',
+		borderRadius: 5,
+		marginRight: '2.5%'
+	},
+	leftButtonText: {
+		color: 'white',
+		fontWeight: theme.fontWeights.bold,
+	},
+	rightButton: {
+		backgroundColor: theme.colors.error,
+		paddingVertical: '3%',
+		paddingHorizontal: '10%',
+		borderRadius: 5,
+		marginLeft: '2.5%'
+	},
+	rightButtonText: {
+		color: 'white',
+		fontWeight: theme.fontWeights.bold,
 	}
 });
 
 const ItemSeparator = () => <View style={styles.separator} />;
 
-const ReviewItem = ({ review }) => {
+const ReviewItem = ({ review, navigate, removeReview }) => {
 	const reviewDate = new Date(review.createdAt);
 
 	return (
@@ -85,13 +108,29 @@ const ReviewItem = ({ review }) => {
 					</View>
 				</View>
 			</View>
+			<View style={styles.flexContainer}>
+				<Pressable 
+					onPress={() => navigate(`/${review.repository.id}`)}
+					style={styles.leftButton}
+				>
+					<Text style={styles.leftButtonText}>View repository</Text>
+				</Pressable>
+				<Pressable
+					onPress={() => removeReview(review.id)}
+					style={styles.rightButton}
+				>
+					<Text style={styles.rightButtonText}>Delete review</Text>
+				</Pressable>
+			</View>
 		</View>);
 };
 
 const UserReviews = () => {
-	const { data, loading } = useQuery(CHECK_USER, {
+	const navigate = useNavigate();
+	const [deleteReview] = useDeleteReview();
+	const { data, loading, refetch } = useQuery(CHECK_USER, {
 		variables: { 'includeReviews': true }
-	})
+	});
 
 	if (loading) {
 		return (
@@ -102,12 +141,38 @@ const UserReviews = () => {
 	const reviewNodes = data.me.reviews
 		? data.me.reviews.edges.map((edge) => edge.node)
 		: [];
+
+	const removeReview = async (id) => {
+		Alert.alert('Delete review', 'Are you sure you want to delete this review?', [
+			{
+				text: 'Cancel',
+				style: 'cancel'
+			},
+			{
+				text: 'Delete',
+				onPress: async () => {
+					try {
+						const { data } = await deleteReview(id);
+						console.log(data);
+						refetch();
+					} catch (e) {
+						console.log(e);
+					}
+				}
+			}
+		]);
+	} 
 	
 	return (
 		<FlatList
 			data={reviewNodes}
 			ItemSeparatorComponent={ItemSeparator}
-			renderItem={({ item }) => <ReviewItem review={item} />}
+			renderItem={({ item }) => 
+				<ReviewItem
+					review={item}
+					navigate={navigate}
+					removeReview={removeReview}
+				/>}
 			keyExtractor={({ id }) => id}
 			ListHeaderComponent={() => <Text style={styles.title}>My Reviews</Text>}
 		/>
