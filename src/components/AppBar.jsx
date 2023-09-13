@@ -57,6 +57,9 @@ const AppBar = () => {
 					<AppBarTab link={"/review"}>
 						Create a review
 					</AppBarTab>
+					<AppBarTab link={"/userreviews"}>
+						My Reviews
+					</AppBarTab>
 				</>)}
 			</ScrollView>
 		</View>);
