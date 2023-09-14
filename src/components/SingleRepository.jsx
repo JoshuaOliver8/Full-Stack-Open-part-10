@@ -106,8 +106,13 @@ const SingleRepository = () => {
 		return null;
 	}
 
-	const { repository, loading } = useSingleRepo(id);
-	console.log(repository);
+	const { repository, loading, handleFetchMore } = useSingleRepo({ 
+		first: 5, repositoryId: id 
+	});
+	
+	const onEndReach = () => {
+		handleFetchMore();
+	}
 
 	if (loading) {
 		return (
@@ -126,6 +131,8 @@ const SingleRepository = () => {
 			renderItem={({ item }) => <ReviewItem review={item} />}
 			keyExtractor={({ id }) => id}
 			ListHeaderComponent={() => <RepositoryInfo repository={repository} />}
+			onEndReached={onEndReach}
+			onEndReachedThreshold={0.5}
 		/>
 	);
 };

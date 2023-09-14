@@ -129,7 +129,8 @@ const UserReviews = () => {
 	const navigate = useNavigate();
 	const [deleteReview] = useDeleteReview();
 	const { data, loading, refetch } = useQuery(CHECK_USER, {
-		variables: { 'includeReviews': true }
+		variables: { 'includeReviews': true },
+		fetchPolicy: 'cache-and-network',
 	});
 
 	if (loading) {

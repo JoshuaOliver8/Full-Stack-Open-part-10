@@ -110,6 +110,8 @@ export class RepositoryListContainer extends React.Component {
 				}
 				keyExtractor={item => item.id}
 				ListHeaderComponent={this.renderHeader}
+				onEndReached={props.onEndReach}
+				onEndReachedThreshold={0.5}
 			/>
 		);
 	}
@@ -123,7 +125,9 @@ const RepositoryList = () => {
 	const [selectView, setSelectView] = useState('Latest repositories');
 	const [filterText, setFilterText] = useState('')
 	const [searchKeyword] = useDebounce(filterText, 500);
-	const { repositories } = useRepositories(orderBy, orderDirection, searchKeyword);
+	const { repositories, handleFetchMore } = useRepositories({
+		first: 6, orderBy, orderDirection, searchKeyword
+	});
 	const navigate = useNavigate();
 
 	useEffect(() => {
@@ -139,6 +143,10 @@ const RepositoryList = () => {
 		}
 	}, [selectView])
 
+	const onEndReach = () => {
+		handleFetchMore();
+	}
+
 	return <RepositoryListContainer
 		repositories={repositories}
 		navigate={navigate}
@@ -146,6 +154,7 @@ const RepositoryList = () => {
 		setSelectView={setSelectView}
 		filterText={filterText}
 		setFilterText={setFilterText}
+		onEndReach={onEndReach}
 	/>;
 };
 

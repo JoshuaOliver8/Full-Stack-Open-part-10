@@ -1,8 +1,8 @@
 import { gql } from '@apollo/client';
 
 export const GET_REPOSITORIES = gql`
-    query repositories($orderBy: AllRepositoriesOrderBy, $orderDirection: OrderDirection, $searchKeyword: String) {
-        repositories(orderBy: $orderBy, orderDirection: $orderDirection, searchKeyword: $searchKeyword) {
+    query repositories($orderBy: AllRepositoriesOrderBy, $orderDirection: OrderDirection, $searchKeyword: String, $after: String, $first: Int) {
+        repositories(orderBy: $orderBy, orderDirection: $orderDirection, searchKeyword: $searchKeyword, after: $after, first: $first) {
             edges {
                 node {
                     id
@@ -15,6 +15,12 @@ export const GET_REPOSITORIES = gql`
                     language
                     ownerAvatarUrl
                 }
+                cursor
+            }
+            pageInfo {
+                endCursor
+                startCursor
+                hasNextPage
             }
         }
     }
@@ -56,8 +62,8 @@ export const CHECK_USER = gql`
 `;
 
 export const GET_ONE_USER_REPO = gql`
-    query ($id: ID!) {
-        repository(id: $id) {
+    query Repository($repositoryId: ID!, $first: Int, $after: String) {
+        repository(id: $repositoryId) {
             id
             fullName
             reviewCount
@@ -68,18 +74,26 @@ export const GET_ONE_USER_REPO = gql`
             language
             ownerAvatarUrl
             url
-            reviews {
+            reviews(first: $first, after: $after) {
+                totalCount
                 edges {
                     node {
                         id
                         text
                         rating
                         createdAt
+                        repositoryId
                         user {
                             id
                             username
                         }
                     }
+                    cursor
+                }
+                pageInfo {
+                    endCursor
+                    startCursor
+                    hasNextPage
                 }
             }
         }
